@@ -72,6 +72,7 @@ echo "setup all graphics services"
 x11vnc -storepasswd tdl /etc/x11vnc.pwd >/dev/null 2>&1
 echo -e '[Unit]\nDescription=Remote desktop service (VNC)\nRequires=lightdm.service\nAfter=lightdm.service\n\n[Service]\nType=forking\nExecStart=/usr/bin/x11vnc -display :0 -forever -shared -bg -auth /var/run/lightdm/root/:0 -rfbauth /etc/x11vnc.pwd -o /var/log/x11vnc.log\nExecStop=/usr/bin/killall x11vnc\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target' > /usr/lib/systemd/system/vnc.service
 systemctl enable vnc.service >/dev/null 2>&1
+systemctl start vnc.service >/dev/null 2>&1
 
 echo "Cleaning up"
 apt-get -y autoremove

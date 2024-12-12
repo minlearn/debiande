@@ -6,7 +6,7 @@ apt-get install -y sudo
 apt-get install -y mc
 echo "Installed Dependencies"
 
-echo -en "installing x11 supports"
+echo "installing x11 supports"
 apt-get install --no-install-recommends debconf-utils -y -qq >/dev/null 2>&1
 echo keyboard-configuration  keyboard-configuration/unsupported_config_options       boolean true | debconf-set-selections >/dev/null 2>&1; \
 echo keyboard-configuration  keyboard-configuration/switch   select  No temporary switch | debconf-set-selections >/dev/null 2>&1; \
@@ -68,9 +68,9 @@ Section "Screen"
 EndSection
 EOF
 
-echo -en "setup all graphics services"
-x11vnc -storepasswd tdl /etc/x11vnc.pwd >/dev/null 2>&1; \
-echo '[Unit]\nDescription=Remote desktop service (VNC)\nRequires=lightdm.service\nAfter=lightdm.service\n\n[Service]\nType=forking\nExecStart=/usr/bin/x11vnc -display :0 -forever -shared -bg -auth /var/run/lightdm/root/:0 -rfbauth /etc/x11vnc.pwd -o /var/log/x11vnc.log\nExecStop=/usr/bin/killall x11vnc\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target' > /usr/lib/systemd/system/vnc.service; \
+echo "setup all graphics services"
+x11vnc -storepasswd tdl /etc/x11vnc.pwd >/dev/null 2>&1
+echo -e '[Unit]\nDescription=Remote desktop service (VNC)\nRequires=lightdm.service\nAfter=lightdm.service\n\n[Service]\nType=forking\nExecStart=/usr/bin/x11vnc -display :0 -forever -shared -bg -auth /var/run/lightdm/root/:0 -rfbauth /etc/x11vnc.pwd -o /var/log/x11vnc.log\nExecStop=/usr/bin/killall x11vnc\nRestart=on-failure\nRestartSec=5\n\n[Install]\nWantedBy=multi-user.target' > /usr/lib/systemd/system/vnc.service
 systemctl enable vnc.service >/dev/null 2>&1
 
 echo "Cleaning up"

@@ -1,13 +1,13 @@
 ###############
 
+silent() { "$@" >/dev/null 2>&1; }
+
 echo "Installing Dependencies"
-apt-get install -y curl
-apt-get install -y sudo
-apt-get install -y mc
+silent apt-get install -y curl sudo mc
 echo "Installed Dependencies"
 
 echo "installing x11 supports"
-apt-get install --no-install-recommends debconf-utils -y -qq >/dev/null 2>&1
+silent apt-get install --no-install-recommends debconf-utils -y
 echo keyboard-configuration  keyboard-configuration/unsupported_config_options       boolean true | debconf-set-selections >/dev/null 2>&1; \
 echo keyboard-configuration  keyboard-configuration/switch   select  No temporary switch | debconf-set-selections >/dev/null 2>&1; \
 echo keyboard-configuration  keyboard-configuration/unsupported_config_layout        boolean true | debconf-set-selections >/dev/null 2>&1; \
@@ -27,7 +27,8 @@ echo keyboard-configuration  keyboard-configuration/xkb-keymap       select  us 
 echo keyboard-configuration  keyboard-configuration/optionscode      string | debconf-set-selections >/dev/null 2>&1; \
 echo keyboard-configuration  keyboard-configuration/store_defaults_in_debconf_db     boolean true | debconf-set-selections >/dev/null 2>&1
 
-apt-get install --no-install-recommends keyboard-configuration xserver-xorg xinit xterm xserver-xorg-video-dummy gnome-session lightdm xinit dbus-x11 x11vnc -y -qq >/dev/null 2>&1
+silent apt-get install --no-install-recommends keyboard-configuration xserver-xorg xinit xterm -y
+silent apt-get install --no-install-recommends xserver-xorg-video-dummy gnome-session lightdm dbus-x11 x11vnc -y
 
 chmod u+s /usr/lib/xorg/Xorg
 touch /home/tdl/.Xauthority /root/.Xauthority
@@ -75,8 +76,8 @@ systemctl enable vnc.service >/dev/null 2>&1
 systemctl start vnc.service >/dev/null 2>&1
 
 echo "Cleaning up"
-apt-get -y autoremove
-apt-get -y autoclean
+silent apt-get -y autoremove
+silent apt-get -y autoclean
 echo "Cleaned"
 
 ##############
